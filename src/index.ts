@@ -18,10 +18,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(addCorrelationId);
 
+import authRoutes from './routes/auth.routes';
+
 // Rutas
+app.use('/api/auth', authRoutes);
+
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', correlationId: req.headers['x-correlation-id'] });
 });
+
 
 // Ejemplo de ruta que lanza un error para probar el middleware
 app.get('/error', (req, res, next) => {
