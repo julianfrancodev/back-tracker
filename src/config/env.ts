@@ -1,13 +1,20 @@
 import dotenv from 'dotenv';
+import { z } from 'zod';
 
 dotenv.config();
 
-export const env = {
-  PORT: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
-  NODE_ENV: process.env.NODE_ENV || 'development',
-};
+const envSchema = z.object({
+  PORT: z.coerce.number().default(3000),
+  NODE_ENV: z.string().default('development'),
+  JWT_SECRET: z.string().min(10, "JWT_SECRET debe tener al menos 10 caracteres"),
+});
 
-// Basic validation
-if (Number.isNaN(env.PORT)) {
-  throw new Error('PORT must be a valid number');
+const parsedEnv = envSchema.safeParse(process.env);
+
+if (!parsedEnv.success) {
+  console.error('❌ Error en las variables de entorno:', parsedEnv.error.format());
+  process.exit(1);
 }
+
+export const env = parsedEnv.data;
+
