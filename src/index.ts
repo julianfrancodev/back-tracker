@@ -19,9 +19,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(addCorrelationId);
 
 import authRoutes from './routes/auth.routes';
+import routeRoutes from './routes/route.routes';
 
 // Rutas
 app.use('/api/auth', authRoutes);
+app.use('/api/routes', routeRoutes);
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', correlationId: req.headers['x-correlation-id'] });
