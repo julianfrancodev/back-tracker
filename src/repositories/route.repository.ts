@@ -9,8 +9,8 @@ export class RouteRepository {
   }
 
   findAll(filters: Omit<RouteQueryDTO, 'page' | 'limit'>, pagination: { limit: number; offset: number }): { data: Route[]; total: number } {
-    let query = 'SELECT * FROM routes WHERE 1=1';
-    let countQuery = 'SELECT COUNT(*) as total FROM routes WHERE 1=1';
+    let query = "SELECT * FROM routes WHERE status != 'INHABILITADA'";
+    let countQuery = "SELECT COUNT(*) as total FROM routes WHERE status != 'INHABILITADA'";
     const params: Record<string, string | number> = {};
 
     if (filters.origin_city) {
@@ -54,7 +54,7 @@ export class RouteRepository {
   }
 
   findById(id: number): Route | undefined {
-    const stmt = this.db.prepare('SELECT * FROM routes WHERE id = ?');
+    const stmt = this.db.prepare("SELECT * FROM routes WHERE id = ? AND status != 'INHABILITADA'");
     return stmt.get(id) as unknown as Route | undefined;
   }
 
@@ -94,7 +94,7 @@ export class RouteRepository {
   }
 
   getDashboardMetrics(startDate?: string, endDate?: string) {
-    let whereClause = 'WHERE 1=1';
+    let whereClause = "WHERE status != 'INHABILITADA'";
     const params: string[] = [];
 
     if (startDate && endDate) {
