@@ -1,0 +1,39 @@
+name: Node.js CI
+
+# Disparadores del Workflow
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    # Máquina virtual donde se ejecutará (Ubuntu es estándar y rápido)
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Traer el código del repositorio a la máquina virtual
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2. Configurar la versión correcta de Node.js
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18.x
+        cache: 'npm' # Habilita caché de dependencias para acelerar ejecuciones futuras
+
+    # 3. Instalación limpia de dependencias 
+    # (npm ci es más seguro en CI/CD que npm install porque respeta exactamente el package-lock.json)
+    - name: Install dependencies
+      run: npm ci
+
+    # 4. Ejecutar el análisis de código estático (Linter)
+    - name: Run ESLint
+      run: npm run lint
+
+    # 5. Ejecutar la suite de pruebas automatizadas
+    # Nota: Si el coverage es menor al umbral (opcional configurarlo en jest) o alguna prueba falla, el CI se detendrá y fallará
+    - name: Run tests with coverage
+      run: npm run test:coverage
