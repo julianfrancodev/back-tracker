@@ -94,4 +94,27 @@ export class RouteRepository {
     stmt.run(id);
     return this.findById(id);
   }
+
+  getDashboardMetrics(startDate?: string, endDate?: string) {
+    let whereClause = 'WHERE 1=1';
+    const params: string[] = [];
+
+    if (startDate && endDate) {
+      whereClause += ' AND created_at BETWEEN ? AND ?';
+      params.push(startDate, endDate);
+    }
+
+    const statusQuery = `SELECT status, COUNT(*) as count FROM routes ${whereClause} GROUP BY status`;
+    const statusStmt = this.db.prepare(statusQuery);
+    const statusCounts = statusStmt.all(...params);
+
+    const topExpensiveQuery = `SELECT * FROM routes ${whereClause} ORDER BY cost_usd DESC LIMIT 5`;
+    const topExpensiveStmt = this.db.prepare(topExpensiveQuery);
+    const topExpensive = topExpensiveStmt.all(...params) as unknown as Route[];
+
+    return {
+      status_counts: statusCounts,
+      top_expensive: topExpensive
+    };
+  }
 }
