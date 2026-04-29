@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { RouteService } from '../services/route.service';
 import { CreateRouteSchema, UpdateRouteSchema, RouteQuerySchema } from '../dtos/route.dto';
+import { ZodError } from 'zod';
 
 // Instancia única del servicio
 const routeService = new RouteService();
@@ -14,8 +15,8 @@ export class RouteController {
       
       const result = routeService.getAllRoutes(filters, page, limit);
       res.status(200).json({ success: true, ...result });
-    } catch (error: any) {
-      if (error.name === 'ZodError') {
+    } catch (error) {
+      if (error instanceof ZodError) {
         res.status(400).json({ success: false, error: error.errors });
         return;
       }
@@ -43,8 +44,8 @@ export class RouteController {
       const data = CreateRouteSchema.parse(req.body);
       const newRoute = routeService.createRoute(data);
       res.status(201).json({ success: true, data: newRoute });
-    } catch (error: any) {
-      if (error.name === 'ZodError') {
+    } catch (error) {
+      if (error instanceof ZodError) {
         res.status(400).json({ success: false, error: error.errors });
         return;
       }
@@ -63,8 +64,8 @@ export class RouteController {
       const data = UpdateRouteSchema.parse(req.body);
       const updatedRoute = routeService.updateRoute(id, data);
       res.status(200).json({ success: true, data: updatedRoute });
-    } catch (error: any) {
-      if (error.name === 'ZodError') {
+    } catch (error) {
+      if (error instanceof ZodError) {
         res.status(400).json({ success: false, error: error.errors });
         return;
       }

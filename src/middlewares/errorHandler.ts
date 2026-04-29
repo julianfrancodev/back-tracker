@@ -1,18 +1,26 @@
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
 
-export interface AppError extends Error {
-  statusCode?: number;
+export class AppError extends Error {
+  public statusCode: number;
+
+  constructor(message: string, statusCode = 500) {
+    super(message);
+    this.statusCode = statusCode;
+    this.name = 'AppError';
+    Error.captureStackTrace(this, this.constructor);
+  }
 }
 
 export const errorHandler = (
-  err: AppError,
+  err: AppError | Error,
   req: Request,
   res: Response,
-  next: NextFunction
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _next: NextFunction
 ) => {
   const correlationId = req.headers['x-correlation-id'] || crypto.randomUUID();
-  const statusCode = err.statusCode || 500;
+  const statusCode = err instanceof AppError ? err.statusCode : ('statusCode' in err ? Number(err.statusCode) : 500);
   
   const response = {
     error: {

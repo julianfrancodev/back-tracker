@@ -15,7 +15,7 @@ export const login = (req: Request, res: Response): void => {
   try {
     const db = getDB();
     const stmt = db.prepare('SELECT * FROM users WHERE username = ?');
-    const user = stmt.get(username) as any;
+    const user = stmt.get(username) as { id: number; username: string; password: string; role: string } | undefined;
 
     if (!user) {
       res.status(401).json({ error: { message: 'Credenciales inválidas' } });
