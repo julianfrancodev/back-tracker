@@ -86,4 +86,28 @@ export class RouteController {
       next(error);
     }
   }
+
+  static getDashboard(req: Request, res: Response, next: NextFunction): void {
+    try {
+      const { startDate, endDate } = req.query as { startDate?: string; endDate?: string };
+      const metrics = routeService.getDashboardMetrics(startDate, endDate);
+      res.status(200).json({ success: true, data: metrics });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async import(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      if (!req.file) {
+        res.status(400).json({ success: false, message: 'No se ha proporcionado ningún archivo CSV' });
+        return;
+      }
+
+      const result = await routeService.importRoutes(req.file.buffer);
+      res.status(200).json({ success: true, data: result });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
