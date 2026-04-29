@@ -48,7 +48,7 @@ describe('Route Integration Tests', () => {
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('success', true);
       expect(response.body.data).toEqual([]);
-      expect(response.body.total).toBe(0);
+      expect(response.body.pagination.total).toBe(0);
     });
   });
 

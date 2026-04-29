@@ -11,43 +11,41 @@ export class RouteRepository {
   findAll(filters: Omit<RouteQueryDTO, 'page' | 'limit'>, pagination: { limit: number; offset: number }): { data: Route[]; total: number } {
     let query = 'SELECT * FROM routes WHERE 1=1';
     let countQuery = 'SELECT COUNT(*) as total FROM routes WHERE 1=1';
-    const params: (string | number)[] = [];
+    const params: Record<string, string | number> = {};
 
     if (filters.origin_city) {
-      query += ' AND origin_city = ?';
-      countQuery += ' AND origin_city = ?';
-      params.push(filters.origin_city);
+      query += ' AND origin_city = $origin_city';
+      countQuery += ' AND origin_city = $origin_city';
+      params['$origin_city'] = filters.origin_city;
     }
     if (filters.destination_city) {
-      query += ' AND destination_city = ?';
-      countQuery += ' AND destination_city = ?';
-      params.push(filters.destination_city);
+      query += ' AND destination_city = $destination_city';
+      countQuery += ' AND destination_city = $destination_city';
+      params['$destination_city'] = filters.destination_city;
     }
     if (filters.vehicle_type) {
-      query += ' AND vehicle_type = ?';
-      countQuery += ' AND vehicle_type = ?';
-      params.push(filters.vehicle_type);
+      query += ' AND vehicle_type = $vehicle_type';
+      countQuery += ' AND vehicle_type = $vehicle_type';
+      params['$vehicle_type'] = filters.vehicle_type;
     }
     if (filters.status) {
-      query += ' AND status = ?';
-      countQuery += ' AND status = ?';
-      params.push(filters.status);
+      query += ' AND status = $status';
+      countQuery += ' AND status = $status';
+      params['$status'] = filters.status;
     }
     if (filters.carrier) {
-      query += ' AND carrier = ?';
-      countQuery += ' AND carrier = ?';
-      params.push(filters.carrier);
+      query += ' AND carrier = $carrier';
+      countQuery += ' AND carrier = $carrier';
+      params['$carrier'] = filters.carrier;
     }
 
-    query += ' LIMIT ? OFFSET ?';
-    
-    const dataParams = [...params, pagination.limit, pagination.offset];
+    query += ` LIMIT ${Number(pagination.limit)} OFFSET ${Number(pagination.offset)}`;
 
     const stmt = this.db.prepare(query);
     const countStmt = this.db.prepare(countQuery);
 
-    const data = stmt.all(...dataParams) as unknown as Route[];
-    const totalRow = countStmt.get(...params) as { total: number };
+    const data = stmt.all(params) as unknown as Route[];
+    const totalRow = countStmt.get(params) as { total: number };
 
     return {
       data,

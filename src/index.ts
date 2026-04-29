@@ -4,8 +4,12 @@ import cors from 'cors';
 import { env } from './config/env';
 import { errorHandler, addCorrelationId, AppError } from './middlewares/errorHandler';
 import { connectDB } from './config/database';
+import { seedDatabase } from './database/seed';
 
 export const app = express();
+
+// Configuración de Express
+app.set('query parser', 'extended');
 
 // Middlewares
 app.use(helmet());
@@ -44,6 +48,7 @@ let server: ReturnType<typeof app.listen>;
 const startServer = async () => {
   try {
     connectDB();
+    await seedDatabase();
 
     server = app.listen(env.PORT, () => {
       console.log(`🚀 Servidor ejecutándose en el puerto ${env.PORT} en modo ${env.NODE_ENV}`);

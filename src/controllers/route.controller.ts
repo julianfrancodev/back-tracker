@@ -7,14 +7,23 @@ import { ZodError } from 'zod';
 const routeService = new RouteService();
 
 export class RouteController {
-  
+
   static getAll(req: Request, res: Response, next: NextFunction): void {
     try {
       const query = RouteQuerySchema.parse(req.query);
       const { page, limit, ...filters } = query;
-      
+
       const result = routeService.getAllRoutes(filters, page, limit);
-      res.status(200).json({ success: true, ...result });
+
+      res.status(200).json({
+        success: true,
+        data: result.data,
+        pagination: {
+          total: result.total,
+          page,
+          limit
+        }
+      });
     } catch (error) {
       if (error instanceof ZodError) {
         res.status(400).json({ success: false, error: error.errors });
