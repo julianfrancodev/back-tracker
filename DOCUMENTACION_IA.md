@@ -1,25 +1,31 @@
-# Documentación sobre el Uso de Inteligencia Artificial
+# Informe de Uso de Inteligencia Artificial (Backend)
 
-## 1. Filosofía de Trabajo (Backend)
+En el desarrollo de la API **TrackRoute**, se integraron herramientas de Inteligencia Artificial como asistentes de productividad, permitiendo completar el ciclo de desarrollo en menos de 24 horas manteniendo estándares de calidad empresarial.
 
-En el contexto de esta prueba técnica con un tiempo límite estricto de 24 horas, he adoptado una filosofía de desarrollo pragmática y eficiente. He utilizado herramientas de Inteligencia Artificial exclusivamente como asistentes de "tipeo rápido" y generación de código repetitivo (boilerplate). 
+## 🤖 Áreas de Aplicación de la IA
 
-Mi objetivo principal al integrar la IA en mi flujo de trabajo fue acelerar las tareas mecánicas para poder enfocar el 100% de mi capacidad cognitiva, tiempo y energía en el diseño de la arquitectura del backend, la toma de decisiones críticas de negocio y la resolución de problemas lógicos complejos. El control total sobre la arquitectura, la seguridad, la estructura de la base de datos y los patrones de diseño se mantuvo siempre bajo mi criterio técnico como desarrollador.
+### 1. Boilerplate y Estructura Base
+La IA facilitó la generación rápida de la configuración inicial de **TypeScript**, **Express** y la estructura de carpetas. Esto permitió ahorrar aproximadamente 2 horas de configuración manual de entornos y transpiladores.
 
-## 2. Dónde y Cómo se utilizó la IA
+### 2. Validación y Esquemas (Zod)
+Se utilizó la IA para traducir los requerimientos del negocio a esquemas de validación de **Zod**. Esto garantizó que las reglas de negocio (ej. formatos de fecha, tipos de vehículos y estados permitidos) estuvieran correctamente tipadas y validadas desde el primer minuto.
 
-La asistencia de la IA se limitó estratégicamente a las siguientes áreas para optimizar la velocidad de entrega sin comprometer la calidad arquitectónica:
+### 3. Mocking del Servicio Externo (SOAP)
+Dado que la integración requería interactuar con un servicio SOAP legado, la IA asistió en la creación de los mocks de respuesta XML. Esto permitió simular escenarios de éxito y error (ej. ruta no encontrada, error de conexión) sin depender de un servidor externo real durante la fase de desarrollo.
 
-* **Generación de Boilerplate:** Aceleración en la escritura de configuraciones iniciales del servidor Express, setup de TypeScript, y la estructura base de linters y frameworks de testing (ESLint, Jest).
-* **Scripting de Datos (Seeding):** Creación rápida del script para la lectura del archivo CSV y poblamiento inicial de la base de datos SQLite.
-* **Validaciones y Tipado:** Asistencia en la sintaxis para construir rápidamente los esquemas de validación estricta con Zod y la generación de las interfaces de tipado para TypeScript.
-* **Estructura de Testing:** Generación del esqueleto base para las pruebas de integración utilizando Supertest, permitiéndome enfocarme en la lógica de las aserciones.
+### 4. Optimización de Consultas SQL
+La IA ayudó a estructurar las sentencias SQL para SQLite, optimizando los JOINS y las cláusulas de paginación para garantizar un rendimiento fluido incluso con el dataset de prueba.
 
-## 3. Decisiones Arquitectónicas (El Factor Humano)
+---
 
-Es fundamental destacar que todas las decisiones estructurales y de diseño fueron tomadas exclusivamente por mí, priorizando la mantenibilidad, escalabilidad y los requerimientos del negocio:
+## 🧠 Decisiones Humanas (Arquitectura y Diseño)
 
-* **Elección de SQLite:** Opté por SQLite como motor de base de datos para garantizar la máxima portabilidad del proyecto. Esto facilita enormemente el proceso de revisión por parte del equipo técnico, permitiendo ejecutar y evaluar el backend inmediatamente sin la fricción de requerir configuraciones de red o levantar contenedores de Docker complejos.
-* **Patrón Adapter y Caché:** Para cumplir con el requerimiento en tiempo real de la integración SOAP, diseñé conscientemente un patrón Adaptador con un mock interno. A este adaptador le integré una estrategia de caché en memoria (usando `node-cache` con un TTL exacto de 60 segundos). Esta decisión de diseño protege activamente al supuesto "servicio legado" de una sobrecarga, optimizando las respuestas del servidor ante el polling intensivo de 30 segundos exigido por el cliente frontend.
-* **Arquitectura por Capas:** Decidí estructurar el backend siguiendo el patrón de diseño *Controller -> Service -> Repository*. Esta separación clara de responsabilidades fomenta un alto desacoplamiento, facilita un entorno altamente testeable (logrando una excelente cobertura en la capa de servicios) y sienta las bases para una escalabilidad horizontal sin dolor.
-* **Pragmatismo en Autenticación:** Tomé la decisión de inyectar los usuarios semilla (roles `ADMIN` y `OPERADOR`) directamente en la base de datos durante el proceso de inicialización. Evité construir un flujo de registro tradicional no solicitado por los requerimientos, optimizando así el valioso tiempo de desarrollo para enfocarme exclusivamente en perfeccionar las funcionalidades *core* de la prueba.
+Es importante recalcar que, aunque la IA aceleró la escritura de código, **las decisiones estratégicas fueron tomadas por el arquitecto a cargo**:
+
+- **Elección de Patrones:** El diseño del **Patrón Adapter** para aislar el servicio de Tracking fue una decisión humana para garantizar la mantenibilidad del código a largo plazo.
+- **Definición de Endpoints:** La estructura de la API REST y la jerarquía de recursos fue diseñada para ser intuitiva y seguir las mejores prácticas de la industria.
+- **Estrategia de Datos:** La decisión pragmática de utilizar **SQLite** para maximizar la portabilidad y cumplir con el plazo de 24 horas fue una decisión de ingeniería basada en el contexto de la prueba técnica.
+
+---
+
+> **Conclusión:** La IA funcionó como un multiplicador de fuerza, permitiendo que el desarrollador se enfocara en la arquitectura y el diseño, mientras la herramienta se encargaba de las tareas repetitivas y la generación de código boilerplate.
