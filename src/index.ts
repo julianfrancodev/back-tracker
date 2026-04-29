@@ -5,7 +5,7 @@ import { env } from './config/env';
 import { errorHandler, addCorrelationId } from './middlewares/errorHandler';
 import { connectDB } from './config/database';
 
-const app = express();
+export const app = express();
 
 // Middlewares
 app.use(helmet());
@@ -46,7 +46,6 @@ const startServer = async () => {
   try {
     connectDB();
 
-
     server = app.listen(env.PORT, () => {
       console.log(`🚀 Servidor ejecutándose en el puerto ${env.PORT} en modo ${env.NODE_ENV}`);
     });
@@ -56,7 +55,9 @@ const startServer = async () => {
   }
 };
 
-startServer();
+if (require.main === module) {
+  startServer();
+}
 
 // Graceful shutdown
 process.on('SIGTERM', () => {

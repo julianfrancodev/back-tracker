@@ -1,0 +1,146 @@
+{
+  "info": {
+    "_postman_id": "eac9f174-ea55-4f69-a7f6-a34387e6a4d9",
+    "name": "Back-tracker",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "7074029"
+  },
+  "item": [
+    {
+      "name": "http://localhost:3000/api/auth/login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"admin123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:3000/api/routes",
+      "request": {
+        "auth": {
+          "type": "inherit"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/routes",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "routes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:3000/api/routes?page=1&limit=5&origin_city=Bogotá&status=ACTIVA",
+      "request": {
+        "auth": {
+          "type": "inherit"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/routes?page=1&limit=5&origin_city=Bogotá&status=ACTIVA",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "routes"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1",
+              "sortOrder": 0
+            },
+            {
+              "key": "limit",
+              "value": "5",
+              "sortOrder": 1
+            },
+            {
+              "key": "origin_city",
+              "value": "Bogotá",
+              "sortOrder": 2
+            },
+            {
+              "key": "status",
+              "value": "ACTIVA",
+              "sortOrder": 3
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:3000/api/routes/import",
+      "request": {
+        "auth": {
+          "type": "inherit"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "id": 0,
+              "fileUploadError": "",
+              "src": [
+                "c:\\Users\\julia\\Downloads\\routes_dataset.csv"
+              ]
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/routes/import",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "routes",
+            "import"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
