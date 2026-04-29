@@ -13,7 +13,8 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "seed": "ts-node-dev src/database/seed.ts",
-    "lint": "eslint \"src/**/*.ts\""
+    "lint": "eslint \"src/**/*.ts\"",
+    "db:reset": "node -e \"const fs = require('fs'); if (fs.existsSync('database.sqlite')) fs.unlinkSync('database.sqlite'); console.log('✅ Base de datos eliminada exitosamente.');\""
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
