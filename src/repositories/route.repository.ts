@@ -11,7 +11,7 @@ export class RouteRepository {
   findAll(filters: Omit<RouteQueryDTO, 'page' | 'limit'>, pagination: { limit: number; offset: number }): { data: Route[]; total: number } {
     let query = 'SELECT * FROM routes WHERE 1=1';
     let countQuery = 'SELECT COUNT(*) as total FROM routes WHERE 1=1';
-    const params: any[] = [];
+    const params: (string | number)[] = [];
 
     if (filters.origin_city) {
       query += ' AND origin_city = ?';

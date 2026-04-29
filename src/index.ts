@@ -2,7 +2,7 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import { env } from './config/env';
-import { errorHandler, addCorrelationId } from './middlewares/errorHandler';
+import { errorHandler, addCorrelationId, AppError } from './middlewares/errorHandler';
 import { connectDB } from './config/database';
 
 export const app = express();
@@ -32,8 +32,7 @@ app.get('/health', (req, res) => {
 
 // Ejemplo de ruta que lanza un error para probar el middleware
 app.get('/error', (req, res, next) => {
-  const error = new Error('Error de prueba');
-  (error as any).statusCode = 400;
+  const error = new AppError('Error de prueba', 400);
   next(error);
 });
 

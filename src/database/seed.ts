@@ -27,7 +27,7 @@ const seedDatabase = () => {
       process.exit(1);
     }
 
-    const results: any[] = [];
+    const results: Record<string, string>[] = [];
 
     fs.createReadStream(csvFilePath)
       .pipe(csv())

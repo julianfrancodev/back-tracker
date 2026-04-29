@@ -9,6 +9,7 @@ export interface AuthPayload {
 }
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       user?: AuthPayload;
@@ -30,7 +31,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
     const payload = jwt.verify(token, env.JWT_SECRET) as AuthPayload;
     req.user = payload;
     next();
-  } catch (error) {
+  } catch {
     res.status(401).json({ error: { message: 'Token inválido o expirado' } });
   }
 };

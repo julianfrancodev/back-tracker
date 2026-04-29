@@ -1,16 +1,17 @@
 import request from 'supertest';
 import { app } from '../../index';
-import { RouteRepository } from '../../repositories/route.repository';
 import { RouteService } from '../../services/route.service';
 
 // 1. Mocking global de autenticación
 jest.mock('../../middlewares/auth.middleware.ts', () => ({
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   verifyToken: (req: any, res: any, next: any) => {
     // Inyectamos el usuario a la request para que pase requireRole
     req.user = { id: 1, username: 'admin', role: 'ADMIN' };
     next();
   },
   requireRole: () => (req: any, res: any, next: any) => next()
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 }));
 
 // 2. Mocking de Repositorio o Base de Datos

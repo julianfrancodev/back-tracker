@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { RouteService } from '../route.service';
 import { RouteRepository } from '../../repositories/route.repository';
 import { AppError } from '../../middlewares/errorHandler';

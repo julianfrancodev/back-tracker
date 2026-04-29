@@ -1,7 +1,10 @@
 import { getDB } from '../config/database';
 import { RouteRepository } from '../repositories/route.repository';
+import csvParser from 'csv-parser';
+import { Readable } from 'stream';
+import { ZodError } from 'zod';
 import { AppError } from '../middlewares/errorHandler';
-import { CreateRouteDTO, UpdateRouteDTO, RouteQueryDTO, Route } from '../dtos/route.dto';
+import { CreateRouteDTO, UpdateRouteDTO, RouteQueryDTO, Route, CreateRouteSchema } from '../dtos/route.dto';
 
 export class RouteService {
   private _repository?: RouteRepository;
@@ -21,9 +24,7 @@ export class RouteService {
   getRouteById(id: number): Route {
     const route = this.repository.findById(id);
     if (!route) {
-      const error = new Error('Ruta no encontrada') as AppError;
-      error.statusCode = 404;
-      throw error;
+      throw new AppError('Ruta no encontrada', 404);
     }
     return route;
   }
@@ -46,14 +47,9 @@ export class RouteService {
     return this.repository.getDashboardMetrics(startDate, endDate);
   }
 
-  importRoutes(fileBuffer: Buffer): Promise<{ imported: number; failed: number; errors: any[] }> {
+  importRoutes(fileBuffer: Buffer): Promise<{ imported: number; failed: number; errors: Record<string, unknown>[] }> {
     return new Promise((resolve) => {
-      const csvParser = require('csv-parser');
-      const { Readable } = require('stream');
-      const { CreateRouteSchema } = require('../dtos/route.dto');
-      
-      const results: any[] = [];
-      const errors: any[] = [];
+      const errors: Record<string, unknown>[] = [];
       let imported = 0;
       let failed = 0;
       let rowNumber = 1;
@@ -64,7 +60,7 @@ export class RouteService {
 
       readableStream
         .pipe(csvParser())
-        .on('data', (data: any) => {
+        .on('data', (data: Record<string, string | number>) => {
           rowNumber++;
           try {
             // Convertir strings a números según corresponda
@@ -75,19 +71,19 @@ export class RouteService {
             const parsedData = CreateRouteSchema.parse(data);
             this.repository.create(parsedData);
             imported++;
-          } catch (error: any) {
+          } catch (error) {
             failed++;
             errors.push({
               row: rowNumber,
               data,
-              error: error.errors || error.message
+              error: error instanceof ZodError ? error.errors : (error as Error).message
             });
           }
         })
         .on('end', () => {
           resolve({ imported, failed, errors });
         })
-        .on('error', (err: any) => {
+        .on('error', (err: Error) => {
           resolve({ imported, failed, errors: [{ error: 'Error al procesar el archivo CSV', detail: err.message }] });
         });
     });
