@@ -1,4 +1,8 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
+process.env.PORT = '3000';
+process.env.NODE_ENV = 'test';
+process.env.JWT_SECRET = 'super-secret-test-key';
+
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
